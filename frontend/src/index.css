@@ -1,0 +1,135 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body {
+  overscroll-behavior-x: none;
+  /* Hardware acceleration for the entire page container */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+}
+
+@layer base {
+  :root {
+    --background: 220 20% 97%;
+    --foreground: 220 30% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 220 30% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 30% 10%;
+    --primary: 220 90% 56%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 250 70% 60%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 220 15% 93%;
+    --muted-foreground: 220 10% 45%;
+    --accent: 190 90% 50%;
+    --accent-foreground: 220 30% 10%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 15% 88%;
+    --input: 220 15% 88%;
+    --ring: 220 90% 56%;
+    --radius: 0.75rem;
+    --neon-blue: 220 90% 56%;
+    --neon-cyan: 190 90% 50%;
+    --neon-violet: 250 70% 60%;
+    --glass-bg: 0 0% 100% / 0.7;
+    --glass-border: 220 15% 88% / 0.8;
+    --glass-bg-deep: 0 0% 100% / 0.85;
+    --glass-border-bright: 220 15% 85% / 0.9;
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-body: 'Outfit', sans-serif;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-body);
+    /* Prevent layout shifts */
+    text-rendering: optimizeLegibility;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+  }
+}
+
+@layer components {
+  /* Optimized Glass Panel: GPU Accelerated */
+  .glass-panel {
+    background: hsl(var(--glass-bg));
+    backdrop-filter: blur(12px) saturate(1.1); /* Blur thoda kam kiya performance ke liye */
+    -webkit-backdrop-filter: blur(12px) saturate(1.1);
+    border: 1px solid hsl(var(--glass-border));
+    /* Hardware acceleration trigger */
+    transform: translateZ(0);
+    will-change: transform, backdrop-filter;
+  }
+
+  .glass-panel-deep {
+    background: hsl(var(--glass-bg-deep));
+    backdrop-filter: blur(20px) saturate(1.2); /* 30px se 20px kiya GPU load kam karne ke liye */
+    -webkit-backdrop-filter: blur(20px) saturate(1.2);
+    border: 1px solid hsl(var(--glass-border-bright));
+    /* Heavy components containment */
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+    will-change: transform, opacity;
+  }
+
+  .text-gradient-neon {
+    background: linear-gradient(135deg, hsl(var(--neon-cyan)), hsl(var(--neon-blue)), hsl(var(--neon-violet)));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    /* Static rendering for gradient text to save CPU */
+    will-change: auto;
+  }
+
+  /* Fix for lagging canvas background */
+  canvas {
+    contain: strict;
+    pointer-events: none;
+    /* Forces GPU rendering */
+    transform: translate3d(0,0,0);
+  }
+
+  .btn-gradient {
+    background: linear-gradient(135deg, hsl(var(--neon-cyan)), hsl(var(--primary)), hsl(var(--neon-violet)));
+    color: white;
+    box-shadow: 0 4px 14px hsl(var(--primary) / 0.2);
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+    /* Smooth button scaling */
+    will-change: transform;
+  }
+  
+  .btn-gradient:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 6px 20px hsl(var(--primary) / 0.3);
+  }
+}
+
+@layer utilities {
+  .hover-lift {
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s ease;
+    will-change: transform;
+  }
+  .hover-lift:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Utility to hide elements while scrolling if they cause lag */
+  .gpu-accelerate {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }
+}
